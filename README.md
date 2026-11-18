@@ -91,11 +91,11 @@ you reply in that session.
   (`allowManagedHooksOnly`, `disableAllHooks`), the hooks in `~/.claude/settings.json` are ignored.
   The [CLAUDE.md](#claudemd-notes-sessions-send-themselves) notes still work; ask whoever manages the
   settings if you want the automatic notes too.
-- **Meetings** (from 0.1.3). In a call (an app is using the microphone), during a Focus session, or
-  while you present or run something full screen, Lantern doesn't chime or speak. While you present
-  or run something full screen, new notes only light the corner glow instead of opening the card. Tray:
+- **Meetings.** In a call (an app is using the microphone), during a Focus session, or while you
+  present or run something full screen, Lantern doesn't chime or speak. While you present or run
+  something full screen, new notes only light the corner glow instead of opening the card. Tray:
   *Quiet during calls and presentations*. *Do not disturb* in the tray keeps the card closed and
-  silences everything.
+  silences everything; *Quiet for an hour* does the same and ends by itself.
 
 ## Several machines, or moving the folder
 
@@ -114,25 +114,34 @@ save it (tray: Open config). The ones you're most likely to change:
 | Key | Default | |
 |---|---|---|
 | `corner` | `"bottom-right"` | `"bottom-left"`, `"top-right"` or `"top-left"` |
-| `monitor` | `"active"` | `"active"`: the monitor you're using when a note arrives (from 0.1.3); `"primary"`; a number (left to right); or a device name like `"\\\\.\\DISPLAY2"`. Config files from 0.1.2 and earlier have `"primary"` written in them: change it to `"active"` to get the new behaviour. |
+| `monitor` | `"active"` | `"active"`: the monitor you're using when a note arrives; `"primary"`; a number (left to right); or a device name like `"\\\\.\\DISPLAY2"` (tray: Follow the monitor I'm using). Config files from 0.1.2 and earlier have `"primary"` written in them: check *Follow the monitor I'm using* in the tray to get the new behaviour. |
 | `voice.enabled` | `true` | speak notes that need you (tray: Voice) |
 | `voice.engine` | `"auto"` | `"kokoro"` or `"winrt"` (tray: Voice engine) |
 | `voice.rate` | `1.0` | speaking rate |
 | `speakDone` | `false` | also speak routine notes (tray: Speak "done" notes) |
 | `chime` | `true` | the soft chime before notes that need you |
 | `minTurnSeconds` | `30` | shorter turns make no note unless they end with a question |
-| `quietWhenBusy` | `true` | from 0.1.3; see [Meetings](#on-a-work-or-locked-down-machine) |
-| `doNotDisturb` | `false` | notes still arrive, but the card stays closed and nothing sounds |
+| `quietWhenBusy` | `true` | see [Meetings](#on-a-work-or-locked-down-machine) (tray: Quiet during calls and presentations) |
+| `doNotDisturb` | `false` | notes still arrive, but the card stays closed and nothing sounds (tray: Do not disturb) |
 | `updates.auto` | `false` | install updates automatically (tray: Update automatically) |
 
-The tray menu also has **Sessions** (from 0.1.3), which lists the working and waiting sessions; click one
-to go there.
+The tray menu also has:
+
+- **Quiet for an hour**: like Do not disturb, but it ends by itself. While it is on, the item shows
+  when the quiet ends ("Quiet until 14:35"); click it to end it early. A restart within the hour
+  keeps it.
+- **Follow the monitor I'm using**: when checked, a new note shows on the monitor you're using; when
+  unchecked, on the primary monitor. It sets `monitor` for you.
+- **Sessions**: the sessions that are working or waiting. Click one to go there.
 
 ## Updates
 
 The tray's **Check for updates** installs the latest release in place, keeping `data\`. With
 **Update automatically** on, Lantern does this by itself. You can also extract a new zip over the old
 files after quitting Lantern.
+
+After an update, Lantern shows a "What's new" note once: "Lantern updated to x.y.z." with the main
+changes from the release notes.
 
 ## Uninstall
 
