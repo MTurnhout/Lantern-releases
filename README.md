@@ -3,7 +3,8 @@
 Lantern is a small Windows companion for Claude Code. When a session finishes a longer piece of work,
 is unsure about something, or needs you, a warm light appears in the corner of your screen with a short
 note. Routine notes stay quiet; notes that need you come with a soft chime and a calm voice. **Open** on
-a note takes you back to that session.
+a note takes you back to that session, and the arrows in its top-right corner make it bigger for reading
+(Esc or the arrows again shrink it). Lantern remembers the size for the next notes.
 
 This repository only holds the releases. Lantern updates itself from here if you turn on
 "Update automatically" in its settings (tray: Settings...).
@@ -41,7 +42,9 @@ original once as `settings.json.bak-lantern`. With the hooks in place:
 
 - a turn that took a while ends with a note made from the session's last message;
 - a session waiting for a permission ends up as a *Needs you* note;
-- short turns (under 30 seconds) stay quiet unless they end with a question.
+- short turns (under 30 seconds) stay quiet unless they end with a question;
+- a session whose Claude Code closes in the middle of a turn leaves one quiet note, *Session ended
+  while working*. It makes no sound. Turn it off in Settings.
 
 Check it with `.\Lantern.exe status`, or send a test note: tray, **Settings...**, then **Try a
 note**. The **Setup** part of Settings also says whether the hooks are installed, and can install
@@ -109,10 +112,20 @@ you reply in that session.
 
 ## Settings
 
-Everything Lantern keeps (settings, waiting notes, logs, voice model) is in `data\` inside its folder.
+Everything Lantern keeps (settings, waiting notes, recent notes, logs, voice model) is in `data\` inside its folder.
 
-The tray menu has the sessions, the waiting notes, *Quiet for an hour*, *Do not disturb* and
-**Settings...**. Settings opens a small window. Every change in it is saved at once:
+The tray menu has the sessions, recent notes, the waiting notes, *Quiet for an hour*, *Do not disturb*
+and **Settings...**. Under **Sessions**, each session has *Go to session* and *Mute until it ends*. A
+muted session's notes still arrive and light the corner glow, but the card stays closed and nothing
+sounds. Other sessions are not affected. The mute ends by itself when the session ends; click it
+again to end it sooner.
+
+**Recent** keeps the last 20 notes that went away: dismissed, cleared because you replied in the
+session, expired, or replaced by a newer one. Choose one to read it again in the card. It opens even
+under *Do not disturb*, and makes no sound. *Clear recent* empties the list. Notes older than a week
+are dropped.
+
+Settings opens a small window. Every change in it is saved at once:
 
 - **Voice**: voice on or off, speak "done" notes, the chime, the engine (Auto, Kokoro or Windows),
   the speed, and **Try the voice**.
@@ -121,8 +134,9 @@ The tray menu has the sessions, the waiting notes, *Quiet for an hour*, *Do not 
   ("Quiet until 14:35"). A restart within the hour keeps it.
 - **Placement**: the corner, and *Follow the monitor I'm using*. When on, a new note shows on the
   monitor you're using; when off, on the primary monitor.
-- **Notes**: how long a turn must take before it makes a note, and **Try a note** (done, question or
-  error).
+- **Notes**: how long a turn must take before it makes a note, *Tell me when a session ends
+  mid-turn*, *Larger card* (notes open in the bigger card; the arrows on the card switch it too), and
+  **Try a note** (done, question or error).
 - **Setup**: whether Claude Code's hooks are installed (with **Install**), start at sign-in, and
   whether the voice model is installed. The window doesn't download the voice; it shows the command.
 - **Updates**: the version, **Check for updates** and **Update automatically**.
@@ -141,6 +155,8 @@ edits too. The keys you're most likely to change:
 | `speakDone` | `false` | also speak routine notes |
 | `chime` | `true` | the soft chime before notes that need you |
 | `minTurnSeconds` | `30` | shorter turns make no note unless they end with a question |
+| `sessionEndNotes` | `true` | a quiet note when a session's Claude Code closes mid-turn |
+| `largeCard` | `false` | notes open in the bigger card (the arrows on the card set it too) |
 | `quietWhenBusy` | `true` | see [Meetings](#on-a-work-or-locked-down-machine) |
 | `doNotDisturb` | `false` | notes still arrive, but the card stays closed and nothing sounds |
 | `updates.auto` | `false` | install updates automatically |
@@ -151,6 +167,9 @@ All of these are in Settings too.
 **Check for updates** in Settings installs the latest release in place, keeping `data\`. With
 **Update automatically** on, Lantern does this by itself. You can also extract a new zip over the old
 files after quitting Lantern.
+
+Each release is signed, and Lantern checks the signature against a key built into it before it installs
+an update. If the check fails, nothing is installed and Settings says "not signed by Lantern's key".
 
 After an update, Lantern shows a "What's new" note once: "Lantern updated to x.y.z." with the main
 changes from the release notes.
