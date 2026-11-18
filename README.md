@@ -6,7 +6,7 @@ note. Routine notes stay quiet; notes that need you come with a soft chime and a
 a note takes you back to that session.
 
 This repository only holds the releases. Lantern updates itself from here if you turn on
-"Update automatically" in its tray menu.
+"Update automatically" in its settings (tray: Settings...).
 
 - [Install](#install)
 - [Connect Claude Code](#connect-claude-code): the hooks, and `CLAUDE.md` so sessions send notes themselves
@@ -43,7 +43,9 @@ original once as `settings.json.bak-lantern`. With the hooks in place:
 - a session waiting for a permission ends up as a *Needs you* note;
 - short turns (under 30 seconds) stay quiet unless they end with a question.
 
-Check it with `.\Lantern.exe status`, or send a test note from the tray menu (Test note).
+Check it with `.\Lantern.exe status`, or send a test note: tray, **Settings...**, then **Try a
+note**. The **Setup** part of Settings also says whether the hooks are installed, and can install
+them.
 
 ### CLAUDE.md (notes sessions send themselves)
 
@@ -79,8 +81,8 @@ you reply in that session.
   `C:\Dev\Lantern`). Lantern never runs anything from `%TEMP%`, `%APPDATA%` or `%LOCALAPPDATA%`.
 - **"Windows protected your PC".** Lantern is not code-signed yet. Either run
   `Unblock-File .\Lantern-win-x64.zip` before extracting, or choose *More info → Run anyway* once.
-- **Start at sign-in blocked?** `install --autostart` says so and carries on; start `Lantern.exe`
-  yourself, or leave out `--autostart`.
+- **Start at sign-in blocked?** `install --autostart` says so and carries on, and so does *Start
+  at sign-in* in Settings; start `Lantern.exe` yourself, or leave out `--autostart`.
 - **The voice download fails** (huggingface.co blocked, or a proxy intercepting HTTPS). `voice install`
   then fetches the same files from this repository's `kokoro-v1.0` release. If GitHub is blocked
   too, copy the voice from a machine that has it:
@@ -93,9 +95,9 @@ you reply in that session.
   settings if you want the automatic notes too.
 - **Meetings.** In a call (an app is using the microphone), during a Focus session, or while you
   present or run something full screen, Lantern doesn't chime or speak. While you present or run
-  something full screen, new notes only light the corner glow instead of opening the card. Tray:
-  *Quiet during calls and presentations*. *Do not disturb* in the tray keeps the card closed and
-  silences everything; *Quiet for an hour* does the same and ends by itself.
+  something full screen, new notes only light the corner glow instead of opening the card. Settings:
+  *Quiet during calls and presentations*. *Do not disturb* (tray or Settings) keeps the card closed
+  and silences everything; *Quiet for an hour* does the same and ends by itself.
 
 ## Several machines, or moving the folder
 
@@ -108,35 +110,45 @@ you reply in that session.
 ## Settings
 
 Everything Lantern keeps (settings, waiting notes, logs, voice model) is in `data\` inside its folder.
-Most settings are in the tray menu; the rest are in `data\config.json`, which is applied as soon as you
-save it (tray: Open config). The ones you're most likely to change:
+
+The tray menu has the sessions, the waiting notes, *Quiet for an hour*, *Do not disturb* and
+**Settings...**. Settings opens a small window. Every change in it is saved at once:
+
+- **Voice**: voice on or off, speak "done" notes, the chime, the engine (Auto, Kokoro or Windows),
+  the speed, and **Try the voice**.
+- **Quiet**: quiet during calls and presentations (see [Meetings](#on-a-work-or-locked-down-machine)),
+  do not disturb, and quiet for an hour. That one ends by itself; while it is on, it shows when
+  ("Quiet until 14:35"). A restart within the hour keeps it.
+- **Placement**: the corner, and *Follow the monitor I'm using*. When on, a new note shows on the
+  monitor you're using; when off, on the primary monitor.
+- **Notes**: how long a turn must take before it makes a note, and **Try a note** (done, question or
+  error).
+- **Setup**: whether Claude Code's hooks are installed (with **Install**), start at sign-in, and
+  whether the voice model is installed. The window doesn't download the voice; it shows the command.
+- **Updates**: the version, **Check for updates** and **Update automatically**.
+- **Open config file** and **Open logs folder**.
+
+The rest is in `data\config.json`, which is applied as soon as you save it. The window shows your
+edits too. The keys you're most likely to change:
 
 | Key | Default | |
 |---|---|---|
 | `corner` | `"bottom-right"` | `"bottom-left"`, `"top-right"` or `"top-left"` |
-| `monitor` | `"active"` | `"active"`: the monitor you're using when a note arrives; `"primary"`; a number (left to right); or a device name like `"\\\\.\\DISPLAY2"` (tray: Follow the monitor I'm using). Config files from 0.1.2 and earlier have `"primary"` written in them: check *Follow the monitor I'm using* in the tray to get the new behaviour. |
-| `voice.enabled` | `true` | speak notes that need you (tray: Voice) |
-| `voice.engine` | `"auto"` | `"kokoro"` or `"winrt"` (tray: Voice engine) |
+| `monitor` | `"active"` | `"active"`: the monitor you're using when a note arrives; `"primary"`; a number (left to right); or a device name like `"\\\\.\\DISPLAY2"`. Config files from 0.1.2 and earlier have `"primary"` written in them: turn on *Follow the monitor I'm using* in Settings to get the new behaviour. |
+| `voice.enabled` | `true` | speak notes that need you |
+| `voice.engine` | `"auto"` | `"kokoro"` or `"winrt"` |
 | `voice.rate` | `1.0` | speaking rate |
-| `speakDone` | `false` | also speak routine notes (tray: Speak "done" notes) |
+| `speakDone` | `false` | also speak routine notes |
 | `chime` | `true` | the soft chime before notes that need you |
 | `minTurnSeconds` | `30` | shorter turns make no note unless they end with a question |
-| `quietWhenBusy` | `true` | see [Meetings](#on-a-work-or-locked-down-machine) (tray: Quiet during calls and presentations) |
-| `doNotDisturb` | `false` | notes still arrive, but the card stays closed and nothing sounds (tray: Do not disturb) |
-| `updates.auto` | `false` | install updates automatically (tray: Update automatically) |
+| `quietWhenBusy` | `true` | see [Meetings](#on-a-work-or-locked-down-machine) |
+| `doNotDisturb` | `false` | notes still arrive, but the card stays closed and nothing sounds |
+| `updates.auto` | `false` | install updates automatically |
 
-The tray menu also has:
-
-- **Quiet for an hour**: like Do not disturb, but it ends by itself. While it is on, the item shows
-  when the quiet ends ("Quiet until 14:35"); click it to end it early. A restart within the hour
-  keeps it.
-- **Follow the monitor I'm using**: when checked, a new note shows on the monitor you're using; when
-  unchecked, on the primary monitor. It sets `monitor` for you.
-- **Sessions**: the sessions that are working or waiting. Click one to go there.
-
+All of these are in Settings too.
 ## Updates
 
-The tray's **Check for updates** installs the latest release in place, keeping `data\`. With
+**Check for updates** in Settings installs the latest release in place, keeping `data\`. With
 **Update automatically** on, Lantern does this by itself. You can also extract a new zip over the old
 files after quitting Lantern.
 
